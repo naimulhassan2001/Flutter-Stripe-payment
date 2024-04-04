@@ -10,7 +10,7 @@ class PaymentController{
 
   Future<void> makePayment() async{
     try{
-      paymentIntentData = await createPaymentIntent("60", "BDT");
+      // paymentIntentData = await createPaymentIntent("60", "BDT");
       if(paymentIntentData != null){
         await Stripe.instance.initPaymentSheet(
             paymentSheetParameters: SetupPaymentSheetParameters(
@@ -39,31 +39,6 @@ class PaymentController{
     }
   }
 
-  createPaymentIntent(String amount, String currency) async {
-    try{
-      Map<String, dynamic> body = {
-        'amount' : calculateAmount(amount),
-        'currency' : currency,
-      };
-
-      var response = await http.post(
-          Uri.parse('https://api.stripe.com/v1/payment_intents'),
-          body: body,
-          // headers: {
-          //   'Authorization' : 'Bearer sk_test_51NsL1qAGQlA3WKiItI5TaZRQlYgxUxxJatB27Dqp9MeBJQo1AH7LrQ1VK2FSYLfgLPXFKOpp3no9ii8XEgSbfgPV008CBSw9Z8',
-          //   'Content-Type' : 'application/x-www-form-urlencoded'
-          // }
-          // headers: {
-          //   'Authorization' : 'Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc',
-          //   'Content-Type' : 'application/x-www-form-urlencoded'
-          // }
-      );
-      print("=============>>>${response.body}----${response.statusCode}<<<==================");
-      return jsonDecode(response.body);
-    } catch (e){
-      print("Error Occurred:======================> ${e.toString()}");
-    }
-  }
 
   calculateAmount(String amount) {
     final a = (int.parse(amount)) * 100;

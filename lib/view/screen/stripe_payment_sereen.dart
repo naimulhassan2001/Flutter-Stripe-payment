@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe_payment/controller/stripe_payment_controller.dart';
-import 'package:get/get.dart';
 
-class StripePaymentScreen extends StatelessWidget {
+class StripePaymentScreen extends StatefulWidget {
   StripePaymentScreen({super.key});
 
+  @override
+  State<StripePaymentScreen> createState() => _StripePaymentScreenState();
+}
+
+class _StripePaymentScreenState extends State<StripePaymentScreen> {
   PaymentController paymentController = PaymentController();
 
   @override
