@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   http: ^1.2.1
   flutter_stripe: ^10.1.1
+  stripe_sdk: ^5.0.0
 
 dev_dependencies:
   flutter_test:

@@ -15,4 +15,10 @@
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <style name="PaymentRelayActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize the theme attributes specific to PaymentRelayActivity -->
+        <!-- For example, you might customize the color scheme or background -->
+    </style>
+
 </resources>
