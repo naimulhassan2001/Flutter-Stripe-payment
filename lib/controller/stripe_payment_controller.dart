@@ -12,7 +12,7 @@ class PaymentController {
   Future<PaymentIntent> stripeCheckPaymentIntentTransaction(String piId) async {
     try {
       Stripe.publishableKey =
-          'pk_test_51OuFaT00cpr6c22EPbiASuCZtGuUhGNbYVPnBWSa7qD1XakSzGclaIXRbOzgkbA4J8IaVHxxjWfVbt2jPRcvcwMc00Eh8xvPlm';
+      'pk_test_51OuFaT00cpr6c22EPbiASuCZtGuUhGNbYVPnBWSa7qD1XakSzGclaIXRbOzgkbA4J8IaVHxxjWfVbt2jPRcvcwMc00Eh8xvPlm';
 
       final paymentIntent = await Stripe.instance.retrievePaymentIntent(piId);
 
@@ -35,22 +35,22 @@ class PaymentController {
       if (paymentIntentData != null) {
         await Stripe.instance
             .initPaymentSheet(
-                paymentSheetParameters: SetupPaymentSheetParameters(
-          billingDetails: const BillingDetails(
-              name: 'Naimul Hassan',
-              email: 'developernaimul00@gmail.com',
-              address: Address(
-                  city: 'Dhaka',
-                  country: 'Bangladesh',
-                  line1: 'Dhaka',
-                  line2: 'Dhaka',
-                  postalCode: '1121',
-                  state: 'Dhaka')),
-          googlePay: const PaymentSheetGooglePay(merchantCountryCode: 'US'),
-          merchantDisplayName: 'Naimul Hassan',
-          paymentIntentClientSecret: paymentIntentData!['client_secret'],
-          style: ThemeMode.dark,
-        ))
+            paymentSheetParameters: SetupPaymentSheetParameters(
+              billingDetails: const BillingDetails(
+                  name: 'Naimul Hassan',
+                  email: 'developernaimul00@gmail.com',
+                  address: Address(
+                      city: 'Dhaka',
+                      country: 'Bangladesh',
+                      line1: 'Dhaka',
+                      line2: 'Dhaka',
+                      postalCode: '1121',
+                      state: 'Dhaka')),
+              googlePay: const PaymentSheetGooglePay(merchantCountryCode: 'US'),
+              merchantDisplayName: 'Naimul Hassan',
+              paymentIntentClientSecret: paymentIntentData!['client_secret'],
+              style: ThemeMode.dark,
+            ))
             .then((value) {
           if (kDebugMode) {
             print('Is completed payment properly????????????????');
@@ -80,13 +80,13 @@ class PaymentController {
           Uri.parse('https://api.stripe.com/v1/payment_intents'),
           body: body,
           headers: {
-            'Authorization':
-                'Bearer sk_test_51OuFaT00cpr6c22EaepfzgtLDqaPXVJKCpGVGFvF3LjhmPMZg02U7HgYMzpPlpi2T5w4EmjFsAkVmry1ZYlweyXu00T5ujqx3N',
+            'Authorization': 'Bearer sk_test_51OuFaT00cpr6c22EaepfzgtLDqaPXVJKCpGVGFvF3LjhmPMZg02U7HgYMzpPlpi2T5w4EmjFsAkVmry1ZYlweyXu00T5ujqx3N',
             'Content-Type': 'application/x-www-form-urlencoded'
           });
       if (kDebugMode) {
         print(
-            "=============>>>${response.body}----${response.statusCode}<<<==================");
+            "=============>>>${response.body}----${response
+                .statusCode}<<<==================");
       }
 
       return jsonDecode(response.body);
@@ -105,7 +105,8 @@ class PaymentController {
   displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet();
-      stripeCheckPaymentIntentTransaction(paymentIntentData!['client_secret']);
+      // stripeCheckPaymentIntentTransaction(paymentIntentData!['client_secret']);
+      retrieveTxnId(paymentIntent: paymentIntentData!['id']);
       if (kDebugMode) {
         print('payment intent$paymentIntentData');
       }
@@ -119,4 +120,23 @@ class PaymentController {
       }
     }
   }
-}
+
+  retrieveTxnId({ required String paymentIntent}) async {
+    try {
+      http.Response response = await http.get(
+          Uri.parse(
+              'https://api.stripe.com/v1/charges?payment_intent=$paymentIntent'),
+          headers: {
+            "Authorization": "Bearer sk_test_51OuFaT00cpr6c22EaepfzgtLDqaPXVJKCpGVGFvF3LjhmPMZg02U7HgYMzpPlpi2T5w4EmjFsAkVmry1ZYlweyXu00T5ujqx3N",
+            "Content-Type": "application/x-www-form-urlencoded"
+          });
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        print("========================================================> data $data");
+        print("Transaction Id ${data['data'][0]['balance_transaction']}");
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }}
